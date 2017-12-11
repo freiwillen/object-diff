@@ -5,11 +5,15 @@ module ObjectDiff
       @b = b
     end
 
-    def diff_by(*attr_names)
+    def diff_by(plain_key:[], complex_key:{})
       Hash.new.tap do |diff|
-        attr_names.each do |attr_name|
+        plain_key.each do |attr_name|
           diff_attr = self.attr_diff(attr_name)
           diff[attr_name] = diff_attr if diff_attr
+        end
+
+        complex_key.each_pair do |attr_name, key|
+          diff[attr_name] = self.class.new(@a.send(attr_name), @b.send(attr_name)).diff_by(plain_key: key)
         end
       end
     end

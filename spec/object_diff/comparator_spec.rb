@@ -8,9 +8,20 @@ module ObjectDiff
       b = OpenStruct.new(:a => 2, :b => 2, :c => 7)
       comparator = Comparator.new(a, b)
 
-      expect(comparator.diff_by(:a, :b, :c)).to eq({
+      expect(comparator.diff_by(plain_key: [:a, :b, :c])).to eq({
         :a => [1, 2],
         :c => [3, 7]
+      })
+    end
+
+    it "considers values of similar value but different kind as different" do
+      a = OpenStruct.new(:a => 1, :b => "2")
+      b = OpenStruct.new(:a => "1", :b => 2)
+      comparator = Comparator.new(a, b)
+
+      expect(comparator.diff_by(plain_key: [:a, :b, :c])).to eq({
+        :a => [1, "1"],
+        :b => ["2", 2]
       })
     end
 
@@ -19,7 +30,7 @@ module ObjectDiff
       b = OpenStruct.new(:a => 2, :b => [2, 3, 4, 5])
       comparator = Comparator.new(a, b)
 
-      expect(comparator.diff_by(:a, :b)).to eq({
+      expect(comparator.diff_by(plain_key: [:a, :b])).to eq({
         :b => {
           :added => [4, 5],
           :removed => [1]
@@ -40,7 +51,7 @@ module ObjectDiff
       })
       comparator = Comparator.new(a, b)
 
-      expect(comparator.diff_by(:a, :b)).to eq({
+      expect(comparator.diff_by(plain_key: [:a, :b])).to eq({
         :b => {
           :a1 => [10, 5],
           :b1 => {
@@ -48,6 +59,18 @@ module ObjectDiff
           },
           :c1 => [12, nil]
         }
+      })
+    end
+    it 'gets diff of attr by a complex key' do
+      a1 = OpenStruct.new(:a1 => 10, :b2 => 12)
+      a = OpenStruct.new(:a => a1)
+      b1 = OpenStruct.new(:a1 => 11, :b2 => 12)
+      b = OpenStruct.new(:a => b1)
+
+      comparator = Comparator.new(a,b)
+
+      expect(comparator.diff_by(complex_key: {:a => [:a1, :b2]})).to eq({
+        :a => {:a1 => [10, 11]}
       })
     end
   end
