@@ -10,7 +10,7 @@ module ObjectDiff
     def diff(a, b)
       Hash.new.tap do |diff|
         plain_key.each do |attr_name|
-          diff_attr = self.attr_diff(a, b, attr_name)
+          diff_attr = self.attr_diff(a.send(attr_name), b.send(attr_name))
           diff[attr_name] = diff_attr if diff_attr
         end
 
@@ -20,12 +20,12 @@ module ObjectDiff
       end
     end
 
-    def attr_diff(a, b, attr_name)
-      differ(a, b, attr_name).new(a.send(attr_name), b.send(attr_name)).diff
+    def attr_diff(a, b)
+      differ(a, b).new(a, b).diff
     end
 
-    def differ(a, b, attr_name)
-      Caster.new(a, b).differ(attr_name)
+    def differ(a, b)
+      Caster.new(a, b).differ
     end
   end
 end

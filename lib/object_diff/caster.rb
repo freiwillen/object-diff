@@ -5,12 +5,12 @@ module ObjectDiff
       @b = b
     end
 
-    def differ(attr_name)
-      if @a.send(attr_name) == @b.send(attr_name)
+    def differ
+      if @a == @b
         NoDiff
-      elsif @a.send(attr_name).is_a?(Array)
+      elsif @a.is_a?(Array)
         ArrayDiff
-      elsif @a.send(attr_name).is_a?(Hash)
+      elsif @a.is_a?(Hash)
         HashDiff
       else
         PlainDiff
