@@ -4,7 +4,7 @@ require "object_diff/hash_diff"
 require "object_diff/array_diff"
 require "object_diff/plain_diff"
 require "object_diff/no_diff"
-require "object_diff/caster"
+require "object_diff/attr_comparator"
 
 module ObjectDiff
 end

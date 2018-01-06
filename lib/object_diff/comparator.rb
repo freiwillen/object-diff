@@ -21,11 +21,7 @@ module ObjectDiff
     end
 
     def attr_diff(a, b)
-      differ(a, b).new(a, b).diff
-    end
-
-    def differ(a, b)
-      Caster.new(a, b).differ
+      AttrComparator.new(a,b).diff
     end
   end
 end
