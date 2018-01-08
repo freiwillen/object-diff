@@ -1,22 +1,26 @@
 module ObjectDiff
   class Comparator
-    attr_reader :plain_key, :complex_key
+    attr_reader :key
 
-    def initialize(plain_key:[], complex_key:{})
-      @plain_key = plain_key
-      @complex_key = complex_key
+    def initialize(*key)
+      @key = key
     end
 
     def diff(a, b)
       Hash.new.tap do |diff|
-        plain_key.each do |attr_name|
-          diff_attr = self.attr_diff(a.send(attr_name), b.send(attr_name))
-          diff[attr_name] = diff_attr if diff_attr
+        key.each do |attr_key|
+          if attr_key.is_a?(Symbol)
+            diff_attr = self.attr_diff(a.send(attr_key), b.send(attr_key))
+            diff[attr_key] = diff_attr if diff_attr
+          elsif attr_key.is_a?(Hash)
+
+            attr_name = attr_key[:attribute]
+            a_attr = a.send(attr_name)
+            b_attr = b.send(attr_name)
+            diff[attr_name] = self.class.new(*attr_key[:key]).diff(a_attr, b_attr)
+          end
         end
 
-        complex_key.each_pair do |attr_name, key|
-          diff[attr_name] = self.class.new(plain_key: key).diff(a.send(attr_name), b.send(attr_name))
-        end
       end
     end
 

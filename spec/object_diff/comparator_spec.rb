@@ -1,5 +1,5 @@
 require "spec_helper"
-require 'ostruct'
+require "ostruct"
 
 module ObjectDiff
   RSpec.describe Comparator do
@@ -7,7 +7,7 @@ module ObjectDiff
       a = OpenStruct.new(:a => 1, :b => 2, :c => 3)
       b = OpenStruct.new(:a => 2, :b => 2, :c => 7)
 
-      comparator = Comparator.new(plain_key: [:a, :b, :c])
+      comparator = Comparator.new(:a, :b, :c)
 
       expect(comparator.diff(a, b)).to eq({
         :a => [1, 2],
@@ -18,7 +18,7 @@ module ObjectDiff
     it "considers values of similar value but different kind as different" do
       a = OpenStruct.new(:a => 1, :b => "2")
       b = OpenStruct.new(:a => "1", :b => 2)
-      comparator = Comparator.new(plain_key: [:a, :b, :c])
+      comparator = Comparator.new(:a, :b, :c)
 
       expect(comparator.diff(a, b)).to eq({
         :a => [1, "1"],
@@ -29,7 +29,7 @@ module ObjectDiff
     it "gets diff by array" do
       a = OpenStruct.new(:a => 2, :b => [1, 2, 3])
       b = OpenStruct.new(:a => 2, :b => [2, 3, 4, 5])
-      comparator = Comparator.new(plain_key: [:a, :b])
+      comparator = Comparator.new(:a, :b)
 
       expect(comparator.diff(a, b)).to eq({
         :b => {
@@ -50,7 +50,7 @@ module ObjectDiff
         :b1 => {:b2 => 20},
         :d1 => 12,
       })
-      comparator = Comparator.new(plain_key: [:a, :b])
+      comparator = Comparator.new(:a, :b)
 
       expect(comparator.diff(a, b)).to eq({
         :b => {
@@ -68,7 +68,7 @@ module ObjectDiff
       b1 = OpenStruct.new(:a1 => 11, :b2 => 12)
       b = OpenStruct.new(:a => b1)
 
-      comparator = Comparator.new(complex_key: {:a => [:a1, :b2]})
+      comparator = Comparator.new({:attribute => :a, :key => [:a1, :b2]})
 
       expect(comparator.diff(a, b)).to eq({
         :a => {:a1 => [10, 11]}
