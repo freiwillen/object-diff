@@ -74,5 +74,33 @@ module ObjectDiff
         :a => {:a1 => [10, 11]}
       })
     end
+    it "gets diff of array of complex objects" do
+      a11 = OpenStruct.new(:id => 1, :attr1 => 5, :attr2 => 7)
+      a12 = OpenStruct.new(:id => 2, :attr1 => 4, :attr2 => 3)
+      a13 = OpenStruct.new(:id => 3, :attr1 => 4, :attr2 => 3)
+
+      a = OpenStruct.new(:a1 => [a11, a12, a13])
+
+      b11 = OpenStruct.new(:id => 1, :attr1 => 25, :attr2 => 17)
+      b12 = OpenStruct.new(:id => 2, :attr1 => 8, :attr2 => 9)
+      b14 = OpenStruct.new(:id => 3, :attr1 => 4, :attr2 => 3)
+
+      b = OpenStruct.new(:a1 => [b11, b12, b14])
+
+      comparator = Comparator.new({:attribute => :a1, :mapper => Mapper.new(:id)})
+
+      expect(comparator.diff(a, b)).to eq({
+        :a => {
+          :a1 => {
+            :added => [b14],
+            :removed => [a13],
+            :changed => {
+              b11 => { :attr1 => [5, 25], :attr2 => [7, 17] },
+              b12 => { :attr1 => [4, 8], :attr2 => [3, 9] },
+            }
+          }
+        }
+      })
+    end
   end
 end
