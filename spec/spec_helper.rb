@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "pry"
+require "ostruct"
 require "object_diff"
 
 RSpec.configure do |config|
