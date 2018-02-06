@@ -6,29 +6,35 @@ module ObjectDiff
     end
 
     def map(a, b)
-      key_map_a = Hash.new.tap do |h|
-        a.each do |element|
-          h[key.map {|key_part| element.send(key_part) }] = element
-        end
-      end
-      key_map_b = Hash.new.tap do |h|
-        b.each do |element|
-          h[key.map {|key_part| element.send(key_part) }] = element
-        end
-      end
+      key_map_a = key_map(a)
+      key_map_b = key_map(b)
       
-      map_by_a = Hash.new.tap do |h|
-        key_map_a.each_pair do |k, v|
-          h[v] = key_map_b[k]
-        end
-      end
-      
-      map_by_b = Hash.new.tap do |h|
-        key_map_b.each_pair do |k, v|
-          h[v] = key_map_a[k]
-        end
-      end
+      map_by_a = map_pair(key_map_a, key_map_b)
+      map_by_b = map_pair(key_map_b, key_map_a)
+
       map_by_a.merge(map_by_b.invert)
+    end
+
+    private
+
+    def key_map(array)
+      Hash.new.tap do |h|
+        array.each do |element|
+          h[ key_for(element) ] = element
+        end
+      end
+    end
+
+    def key_for(element)
+      key.map {|key_part| element.send(key_part) }
+    end
+
+    def map_pair(primary, secondary)
+      Hash.new.tap do |h|
+        primary.each_pair do |k, v|
+          h[v] = secondary[k]
+        end
+      end
     end
   end
 end
