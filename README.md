@@ -29,7 +29,9 @@ and we want to find difference by attributes ```:a```, ```:b``` and ```:c```:
 ```ruby
 comparator = Comparator.new(:a, :b, :c)
 comparator.diff(a, b)) # => {:a => [1, 2],  :c => [3, 7]}
-```  
+```
+
+You can find more examples at ```spec/object_diff/comparator_spec.rb```
 
 ## Development
 
