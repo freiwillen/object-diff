@@ -19,8 +19,17 @@ Or install it yourself as:
     $ gem install object_delta
 
 ## Usage
+Imagine that we have 2 objects:
+```ruby
+a = OpenStruct.new(:a => 1, :b => 2, :c => 3)
+b = OpenStruct.new(:a => 2, :b => 2, :c => 7)
+```
 
-TODO: Write usage instructions here
+and we want to find difference by attributes ```:a```, ```:b``` and ```:c```:
+```ruby
+comparator = Comparator.new(:a, :b, :c)
+comparator.diff(a, b)) # => { :a => [1, 2],  :c => [3, 7]}
+```  
 
 ## Development
 
