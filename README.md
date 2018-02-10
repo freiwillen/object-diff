@@ -28,7 +28,7 @@ b = OpenStruct.new(:a => 2, :b => 2, :c => 7)
 and we want to find difference by attributes ```:a```, ```:b``` and ```:c```:
 ```ruby
 comparator = Comparator.new(:a, :b, :c)
-comparator.diff(a, b)) # => { :a => [1, 2],  :c => [3, 7]}
+comparator.diff(a, b)) # => {:a => [1, 2],  :c => [3, 7]}
 ```  
 
 ## Development
