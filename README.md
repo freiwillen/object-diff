@@ -1,4 +1,5 @@
 # ObjectDelta
+[![Maintainability](https://api.codeclimate.com/v1/badges/5b33c6ee7b253ef2e87e/maintainability)](https://codeclimate.com/github/freiwillen/object-diff/maintainability)
 
 Once upon a time there on a misterious project there  was a need in comparing objects by a provided key. This is how the task was accomplisehd.
 
