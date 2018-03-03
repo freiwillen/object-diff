@@ -86,17 +86,15 @@ module ObjectDiff
 
       b = OpenStruct.new(:a1 => [b11, b12, b14])
 
-      comparator = Comparator.new({:attribute => :a1, :mapper => Mapper.new(:id)})
+      comparator = Comparator.new({:attribute => :a1, :mapper => Mapper.new(:id), :key => [:attr1, :attr2]})
 
       expect(comparator.diff(a, b)).to eq({
-        :a => {
-          :a1 => {
-            :added => [b14],
-            :removed => [a13],
-            :changed => {
-              b11 => { :attr1 => [5, 25], :attr2 => [7, 17] },
-              b12 => { :attr1 => [4, 8], :attr2 => [3, 9] },
-            }
+        :a1 => {
+          :added => [b14],
+          :removed => [a13],
+          :changed => {
+            b11 => { :attr1 => [5, 25], :attr2 => [7, 17] },
+            b12 => { :attr1 => [4, 8], :attr2 => [3, 9] },
           }
         }
       })
