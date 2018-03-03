@@ -38,6 +38,13 @@ object
 collection(array of objects)
 =end
 
+    def simple_attr_diff(attr_details, a, b)
+      attr_name = attr_details[:attribute]
+      a_attr = a.send(attr_name)
+      b_attr = b.send(attr_name)
+      simple_differ_class(a_attr, b_attr).new(a_attr, b_attr).diff
+    end
+
     def object_attr_diff(attr_details, a, b)
       attr_name = attr_details[:attribute]
       a_attr = a.send(attr_name)
@@ -72,13 +79,6 @@ collection(array of objects)
       else
         PlainDiff
       end
-    end
-
-    def simple_attr_diff(attr_details, a, b)
-      attr_name = attr_details[:attribute]
-      a_attr = a.send(attr_name)
-      b_attr = b.send(attr_name)
-      simple_differ_class(a_attr, b_attr).new(a_attr, b_attr).diff
     end
 
     def attr_diff(a, b)
