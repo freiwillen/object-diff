@@ -6,6 +6,7 @@ require "object_diff/plain_diff"
 require "object_diff/no_diff"
 require "object_diff/attr_comparator"
 require "object_diff/mapper"
+require "object_diff/collection_comparator"
 
 module ObjectDiff
 end

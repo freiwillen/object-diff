@@ -82,7 +82,7 @@ module ObjectDiff
 
       b11 = OpenStruct.new(:id => 1, :attr1 => 25, :attr2 => 17)
       b12 = OpenStruct.new(:id => 2, :attr1 => 8, :attr2 => 9)
-      b14 = OpenStruct.new(:id => 3, :attr1 => 4, :attr2 => 3)
+      b14 = OpenStruct.new(:id => 4, :attr1 => 4, :attr2 => 3)
 
       b = OpenStruct.new(:a1 => [b11, b12, b14])
 
@@ -93,8 +93,8 @@ module ObjectDiff
           :added => [b14],
           :removed => [a13],
           :changed => {
-            b11 => { :attr1 => [5, 25], :attr2 => [7, 17] },
-            b12 => { :attr1 => [4, 8], :attr2 => [3, 9] },
+            a11 => { :attr1 => [5, 25], :attr2 => [7, 17] },
+            a12 => { :attr1 => [4, 8], :attr2 => [3, 9] },
           }
         }
       })

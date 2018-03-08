@@ -4,25 +4,29 @@ module ObjectDiff
 
     def initialize(*raw_key)
       @raw_key = raw_key
+      @diff = {}
     end
 
     def diff(a, b)
-      Hash.new.tap do |diff|
-        key.each do |key_item|
-          if key_item[:key].nil? && key_item[:mapper].nil?
-            diff_attr = self.simple_attr_diff(key_item, a, b)
-            diff[key_item[:attribute]] = diff_attr if diff_attr
-          elsif key_item[:mapper]
-            diff[key_item[:attribute]] = collection_attr_diff(key_item, a, b)
-          else
-            diff[key_item[:attribute]] = object_attr_diff(key_item, a, b)
-          end
+      {}.tap do |acc|
+        comparisons.each_pair do |attr_name, comparator|
+          attr_diff = comparator.diff(a.send(attr_name), b.send(attr_name))
+          acc[attr_name] = attr_diff if attr_diff
         end
-
       end
     end
 
-    def key
+    def comparator_for(key_item)
+      if key_item[:key].nil? && key_item[:mapper].nil?
+        AttrComparator.new
+      elsif key_item[:mapper]
+        CollectionComparator.new(key_item[:mapper], key_item[:key])
+      else
+        Comparator.new(*key_item[:key])
+      end
+    end
+
+    def normalized_key
       @raw_key.map do |raw_key_item|
         if raw_key_item.is_a?(Hash)
           raw_key_item
@@ -32,57 +36,11 @@ module ObjectDiff
       end
     end
 
-=begin
-simple
-object
-collection(array of objects)
-=end
-
-    def simple_attr_diff(attr_details, a, b)
-      attr_name = attr_details[:attribute]
-      a_attr = a.send(attr_name)
-      b_attr = b.send(attr_name)
-      simple_differ_class(a_attr, b_attr).new(a_attr, b_attr).diff
-    end
-
-    def object_attr_diff(attr_details, a, b)
-      attr_name = attr_details[:attribute]
-      a_attr = a.send(attr_name)
-      b_attr = b.send(attr_name)
-      key = attr_details[:key]
-      self.class.new(*key).diff(a_attr, b_attr)
-    end
-
-    def collection_attr_diff(attr_details, a, b)
-      attr_name = attr_details[:attribute]
-      a_attr = a.send(attr_name)
-      b_attr = b.send(attr_name)
-      map = attr_details[:mapper].map(a_attr, b_attr)
-      if map.any?
-        diff[attr_name] = {}.tap do |h|
-          map.each_pair do |element_a, element_b|
-            (h[:added] ||= []) << element_b if element_a.nil?
-            (h[:removed] ||= []) << element_a if element_b.nil?
-            (h[:changed] ||= {})[element_a] = self.class.new(*attr_key[:key]).diff(element_a, element_b) if element_a && element_b
-          end
-        end
+    def comparisons
+      normalized_key.each_with_object({}) do |key_item, acc|
+        acc[key_item.delete(:attribute)] = comparator_for(key_item)
       end
     end
 
-    def simple_differ_class(a, b)
-      if a == b
-        NoDiff
-      elsif a.is_a?(Array)
-        ArrayDiff
-      elsif a.is_a?(Hash)
-        HashDiff
-      else
-        PlainDiff
-      end
-    end
-
-    def attr_diff(a, b)
-      AttrComparator.new(a,b).diff
-    end
   end
 end
