@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "object_diff/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "object_delta"
+  spec.name          = "object_diff"
   spec.version       = ObjectDiff::VERSION
   spec.authors       = ["Kostya Malinovskiy"]
   spec.email         = ["kostya.malinovskiy@gmail.com"]

@@ -1,4 +1,4 @@
-# ObjectDelta
+# ObjectDiff
 [![Maintainability](https://api.codeclimate.com/v1/badges/5b33c6ee7b253ef2e87e/maintainability)](https://codeclimate.com/github/freiwillen/object-diff/maintainability)
 
 Once upon a time there on a misterious project there  was a need in comparing objects by a provided key. This is how the task was accomplisehd.
@@ -8,7 +8,7 @@ Once upon a time there on a misterious project there  was a need in comparing ob
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'object_delta'
+gem 'object_diff'
 ```
 
 And then execute:
@@ -17,7 +17,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install object_delta
+    $ gem install object_diff
 
 ## Usage
 Imagine that we have 2 objects:
@@ -42,7 +42,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/object_delta.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/object_diff.
 
 ## License
 
