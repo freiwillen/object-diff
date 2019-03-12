@@ -1,12 +1,8 @@
 module ObjectDiff
   class CollectionComparator
-    def initialize(mapper, key)
+    def initialize(mapper, item_comparator)
       @mapper = mapper
-      @key = key
-    end
-
-    def key
-      @key || []
+      @item_comparator = item_comparator
     end
 
     def diff(a, b)
@@ -28,7 +24,7 @@ module ObjectDiff
     def process_pair(pair, h)
       h[:added] << pair.last && return if pair.first.nil?
       h[:removed] << pair.first && return if pair.last.nil?
-      h[:changed][pair.first] = Comparator.new(*key).diff(*pair)
+      h[:changed][pair.first] = @item_comparator.diff(*pair)
     end
   end
 end

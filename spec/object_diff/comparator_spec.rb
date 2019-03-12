@@ -99,5 +99,29 @@ module ObjectDiff
         }
       })
     end
+    it 'gets diff between complex objects' do
+      photo1 = OpenStruct.new(:id => 1, :name => :photo1, :attr1 => 5, :attr2 => 7)
+      photo2 = OpenStruct.new(:id => 2, :name => :photo2, :attr1 => 6, :attr2 => 3)
+
+      profile = OpenStruct.new(:photos => [photo1, photo2])
+
+      photo1_modified = OpenStruct.new(:id => 1, :name => :photo1, :attr1 => 25, :attr2 => 17)
+      photo3 = OpenStruct.new(:id => 3, :name => :photo3, :attr1 => 4, :attr2 => 13)
+
+      modified_profile = OpenStruct.new(:photos => [photo1_modified, photo3])
+
+      photo_comparator = Comparator.new(:attr1, :attr2)
+      comparator = Comparator.new({:attribute => :photos, :mapper => Mapper.new(:id), :comparator => photo_comparator})
+
+      expect(comparator.diff(profile, modified_profile)).to eq({
+        :photos => {
+          :added => [photo3],
+          :removed => [photo2],
+          :changed => {
+            photo1 => { :attr1 => [5, 25], :attr2 => [7, 17] },
+          }
+        }
+      })
+    end
   end
 end

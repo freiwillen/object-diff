@@ -16,14 +16,14 @@ module ObjectDiff
       end
     end
 
+    private
+
     def comparator_for(key_item)
-      if key_item[:key].nil? && key_item[:mapper].nil?
-        AttrComparator.new
-      elsif key_item[:mapper]
-        CollectionComparator.new(key_item[:mapper], key_item[:key])
-      else
-        Comparator.new(*key_item[:key])
-      end
+      comparator = key_item.delete(:comparator)
+      comparator ||= AttrComparator.new unless key_item[:key]
+      comparator ||= Comparator.new(*key_item[:key])
+      comparator = CollectionComparator.new(key_item[:mapper], comparator) if key_item[:mapper]
+      comparator
     end
 
     def normalized_key
@@ -41,6 +41,5 @@ module ObjectDiff
         acc[key_item.delete(:attribute)] = comparator_for(key_item)
       end
     end
-
   end
 end
